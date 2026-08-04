@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arts Festival Live Scoreboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+    body { font-family: 'Manrope', sans-serif; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 pb-12">
+
+  <!-- Header Section -->
+  <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-xl md:text-2xl font-black text-amber-400">ARTS FESTIVAL 2026</h1>
+        <p class="text-xs text-gray-400">ലൈവ് മത്സര ഫലങ്ങളും പോയിന്റ് ബോർഡും</p>
+      </div>
+      <span class="bg-emerald-500/10 text-emerald-400 text-xs px-3 py-1 rounded-full font-bold border border-emerald-500/20 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
+      </span>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 mt-6 space-y-8">
+
+    <!-- Group Scoreboard -->
+    <section>
+      <h2 class="text-lg font-bold mb-3 text-gray-700">ഗ്രൂപ്പ് പോയിന്റ് നില</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-red-600 text-white rounded-2xl p-6 shadow-md border-b-8 border-red-800">
+          <div class="text-sm font-semibold uppercase tracking-wider text-red-200">Red Group</div>
+          <div id="scoreRed" class="text-5xl font-black mt-2">0</div>
+          <div class="text-xs text-red-200 mt-1">ആകെ പോയിന്റുകൾ</div>
+        </div>
+        <div class="bg-emerald-600 text-white rounded-2xl p-6 shadow-md border-b-8 border-emerald-800">
+          <div class="text-sm font-semibold uppercase tracking-wider text-emerald-200">Green Group</div>
+          <div id="scoreGreen" class="text-5xl font-black mt-2">0</div>
+          <div class="text-xs text-emerald-200 mt-1">ആകെ പോയിന്റുകൾ</div>
+        </div>
+        <div class="bg-blue-600 text-white rounded-2xl p-6 shadow-md border-b-8 border-blue-800">
+          <div class="text-sm font-semibold uppercase tracking-wider text-blue-200">Blue Group</div>
+          <div id="scoreBlue" class="text-5xl font-black mt-2">0</div>
+          <div class="text-xs text-blue-200 mt-1">ആകെ പോയിന്റുകൾ</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top 5 Category Champions (Sum Total Points) -->
+    <section>
+      <h2 class="text-lg font-bold mb-3 text-gray-700">കാറ്റഗറി ചാമ്പ്യന്മാർ (Top 5)</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+          <h3 class="font-bold text-amber-600 text-base mb-3 border-b pb-2">Senior Top 5</h3>
+          <ol id="seniorTop5" class="space-y-2 text-sm"><li class="text-gray-400 italic">ഡാറ്റ ലഭ്യമല്ല</li></ol>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+          <h3 class="font-bold text-blue-600 text-base mb-3 border-b pb-2">Junior Top 5</h3>
+          <ol id="juniorTop5" class="space-y-2 text-sm"><li class="text-gray-400 italic">ഡാറ്റ ലഭ്യമല്ല</li></ol>
+        </div>
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+          <h3 class="font-bold text-emerald-600 text-base mb-3 border-b pb-2">Sub-Junior Top 5</h3>
+          <ol id="subJuniorTop5" class="space-y-2 text-sm"><li class="text-gray-400 italic">ഡാറ്റ ലഭ്യമല്ല</li></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Search & Results Table -->
+    <section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-gray-800">മത്സര ഫലങ്ങൾ (Event Results)</h2>
+          <p class="text-xs text-gray-500">പേര്, മത്സരം അല്ലെങ്കിൽ കാറ്റഗറി ടൈപ്പ് ചെയ്ത് തിരയുക</p>
+        </div>
+        <div class="w-full md:w-72">
+          <input type="text" id="searchInput" onkeyup="renderTable()" placeholder="സെർച്ച് ചെയ്യുക..." class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-400" />
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-100 text-gray-600 font-semibold border-b">
+              <th class="p-3">പേര്</th>
+              <th class="p-3">ഗ്രൂപ്പ്</th>
+              <th class="p-3">കാറ്റഗറി</th>
+              <th class="p-3">ഇനം</th>
+              <th class="p-3">സ്ഥാനം</th>
+              <th class="p-3">ഗ്രേഡ്</th>
+              <th class="p-3">പോയിന്റ്</th>
+            </tr>
+          </thead>
+          <tbody id="publicTableBody">
+            <!-- Dynamic Data -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function getRecords() {
+      return JSON.parse(localStorage.getItem('arts_festival_records') || '[]');
+    }
+
+    function updateView() {
+      const records = getRecords();
+
+      // 1. Group Totals
+      let groupScores = { Red: 0, Green: 0, Blue: 0 };
+      records.forEach(r => {
+        if(groupScores[r.group] !== undefined) groupScores[r.group] += Number(r.points || 0);
+      });
+
+      document.getElementById('scoreRed').innerText = groupScores.Red;
+      document.getElementById('scoreGreen').innerText = groupScores.Green;
+      document.getElementById('scoreBlue').innerText = groupScores.Blue;
+
+      // 2. Category Top 5 (Summing all points per student)
+      updateCategoryTop5(records, 'Senior', 'seniorTop5');
+      updateCategoryTop5(records, 'Junior', 'juniorTop5');
+      updateCategoryTop5(records, 'Sub-Junior', 'subJuniorTop5');
+
+      renderTable();
+    }
+
+    function updateCategoryTop5(records, cat, elementId) {
+      let studentTotals = {};
+
+      records.filter(r => r.category === cat).forEach(r => {
+        const cleanedName = r.name.trim();
+        studentTotals[cleanedName] = (studentTotals[cleanedName] || 0) + Number(r.points || 0);
+      });
+
+      let sorted = Object.entries(studentTotals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const container = document.getElementById(elementId);
+      if(sorted.length === 0) {
+        container.innerHTML = '<li class="text-gray-400 italic">ഡാറ്റ ലഭ്യമല്ല</li>';
+        return;
+      }
+
+      container.innerHTML = sorted.map(([name, pts], index) => `
+        <li class="flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-100">
+          <span class="font-semibold text-gray-700">${index + 1}. ${name}</span>
+          <span class="font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">${pts} Pts</span>
+        </li>
+      `).join('');
+    }
+
+    function renderTable() {
+      const records = getRecords();
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const tbody = document.getElementById('publicTableBody');
+
+      const filtered = records.filter(r => 
+        (r.name && r.name.toLowerCase().includes(search)) ||
+        (r.event && r.event.toLowerCase().includes(search)) ||
+        (r.category && r.category.toLowerCase().includes(search)) ||
+        (r.group && r.group.toLowerCase().includes(search)) ||
+        (r.position && r.position.toLowerCase().includes(search))
+      );
+
+      if(filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-gray-400">ഫലങ്ങൾ ഒന്നും കണ്ടെത്തിയില്ല</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-3 font-semibold">${r.name}</td>
+          <td class="p-3">
+            <span class="px-2.5 py-1 text-xs font-bold rounded-full ${
+              r.group === 'Red' ? 'bg-red-100 text-red-700' :
+              r.group === 'Green' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'
+            }">${r.group}</span>
+          </td>
+          <td class="p-3">${r.category}</td>
+          <td class="p-3">${r.event}</td>
+          <td class="p-3 font-medium">${r.position !== 'None' ? r.position : '-'}</td>
+          <td class="p-3 font-medium">${r.grade !== 'None' ? r.grade : '-'}</td>
+          <td class="p-3 font-bold text-amber-600">+${r.points}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Auto Refresh when Admin updates data in another tab/window
+    window.addEventListener('storage', updateView);
+
+    // Initial Load
+    updateView();
+  </script>
+</body>
+</html>
