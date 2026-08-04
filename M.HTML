@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - Arts Festival</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap');
+    body { font-family: 'Manrope', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen pb-12">
+
+  <!-- Header -->
+  <header class="bg-slate-800 border-b border-slate-700 py-4 px-6 shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div>
+        <h1 class="text-xl font-black text-amber-400">⚙️ ADMIN PANEL</h1>
+        <p class="text-xs text-gray-400">മത്സര ഫലങ്ങൾ എൻ്റർ ചെയ്യാനും എഡിറ്റ് ചെയ്യാനുമുള്ള പേജ്</p>
+      </div>
+      <a href="index.html" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-xs px-3 py-2 rounded-lg border border-slate-600 transition">
+        👁️ പബ്ലിക് വ്യൂ തുറക്കുക
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 mt-6 space-y-8">
+
+    <!-- Add / Edit Result Form -->
+    <section class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+      <div class="flex justify-between items-center mb-4">
+        <h2 id="formTitle" class="text-lg font-bold text-amber-400">പുതിയ ഫലം ചേർക്കുക</h2>
+        <button id="cancelEditBtn" onclick="resetForm()" class="hidden text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-gray-300">
+          Cancel Edit ✖
+        </button>
+      </div>
+
+      <form id="resultForm" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <input type="hidden" id="editRecordId" value="" />
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">മത്സരാർത്ഥിയുടെ പേര്</label>
+          <input type="text" id="studentName" required class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="പേര് ടൈപ്പ് ചെയ്യുക" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">ഗ്രൂപ്പ്</label>
+          <select id="groupSelect" class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="Red">Red Group</option>
+            <option value="Green">Green Group</option>
+            <option value="Blue">Blue Group</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">കാറ്റഗറി</label>
+          <select id="categorySelect" class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="Senior">Senior</option>
+            <option value="Junior">Junior</option>
+            <option value="Sub-Junior">Sub-Junior</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">മത്സരം / ഇനം</label>
+          <input type="text" id="eventName" required class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="ഉദാ: മാപ്പിളപ്പാട്ട്" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">സ്ഥാനം (Position)</label>
+          <select id="positionSelect" onchange="toggleCustomPosition()" class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="1st">1st Place</option>
+            <option value="2nd">2nd Place</option>
+            <option value="3rd">3rd Place</option>
+            <option value="A Grade Only">A Grade Only</option>
+            <option value="Custom">Custom Position (കസ്റ്റം)</option>
+          </select>
+        </div>
+
+        <div id="customPositionBox" class="hidden">
+          <label class="block text-xs font-medium mb-1 text-amber-300">കസ്റ്റം പൊസിഷൻ</label>
+          <input type="text" id="customPositionInput" class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="ഉദാ: 4th Place" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-gray-300">ഗ്രേഡ് (Grade)</label>
+          <select id="gradeSelect" class="w-full bg-slate-700 text-white rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+            <option value="A">A Grade</option>
+            <option value="B">B Grade</option>
+            <option value="C">C Grade</option>
+            <option value="None">No Grade</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium mb-1 text-amber-400 font-bold">പോയിന്റ് (Points)</label>
+          <input type="number" id="customPointsInput" min="0" required class="w-full bg-slate-700 text-amber-300 font-bold rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400" placeholder="8" value="8" />
+        </div>
+
+        <div class="sm:col-span-2 md:col-span-4 flex justify-between items-center mt-2">
+          <button type="button" onclick="clearAllData()" class="text-xs text-red-400 hover:text-red-300 underline">എല്ലാ ഡാറ്റയും ക്ലിയർ ചെയ്യുക</button>
+          <button type="submit" id="submitBtn" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-2.5 rounded-lg transition text-sm">
+            ഫലം പബ്ലിഷ് ചെയ്യുക 🚀
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Data Table -->
+    <section class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+      <h2 class="text-lg font-bold text-gray-200 mb-4">ചേർത്ത വിവരങ്ങൾ (Manage Results)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-slate-700 text-gray-300 border-b border-slate-600">
+              <th class="p-3">പേര്</th>
+              <th class="p-3">ഗ്രൂപ്പ്</th>
+              <th class="p-3">കാറ്റഗറി</th>
+              <th class="p-3">ഇനം</th>
+              <th class="p-3">സ്ഥാനം</th>
+              <th class="p-3">ഗ്രേഡ്</th>
+              <th class="p-3">പോയിന്റ്</th>
+              <th class="p-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminTableBody">
+            <!-- Records Loaded via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function getRecords() {
+      return JSON.parse(localStorage.getItem('arts_festival_records') || '[]');
+    }
+
+    function saveRecords(data) {
+      localStorage.setItem('arts_festival_records', JSON.stringify(data));
+      renderAdminTable();
+    }
+
+    function toggleCustomPosition() {
+      const posSelect = document.getElementById('positionSelect').value;
+      const customBox = document.getElementById('customPositionBox');
+      if (posSelect === 'Custom') {
+        customBox.classList.remove('hidden');
+      } else {
+        customBox.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('resultForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      let records = getRecords();
+      const editId = document.getElementById('editRecordId').value;
+
+      const name = document.getElementById('studentName').value.trim();
+      const group = document.getElementById('groupSelect').value;
+      const category = document.getElementById('categorySelect').value;
+      const event = document.getElementById('eventName').value.trim();
+      
+      let position = document.getElementById('positionSelect').value;
+      if (position === 'Custom') {
+        position = document.getElementById('customPositionInput').value.trim() || 'Custom';
+      }
+
+      const grade = document.getElementById('gradeSelect').value;
+      const points = parseInt(document.getElementById('customPointsInput').value) || 0;
+
+      if (editId) {
+        records = records.map(r => r.id == editId ? { id: Number(editId), name, group, category, event, position, grade, points } : r);
+      } else {
+        records.push({ id: Date.now(), name, group, category, event, position, grade, points });
+      }
+
+      saveRecords(records);
+      resetForm();
+    });
+
+    function editRecord(id) {
+      const records = getRecords();
+      const rec = records.find(r => r.id === id);
+      if (!rec) return;
+
+      document.getElementById('editRecordId').value = rec.id;
+      document.getElementById('studentName').value = rec.name;
+      document.getElementById('groupSelect').value = rec.group;
+      document.getElementById('categorySelect').value = rec.category;
+      document.getElementById('eventName').value = rec.event;
+      
+      const standardPositions = ['1st', '2nd', '3rd', 'A Grade Only'];
+      if (standardPositions.includes(rec.position)) {
+        document.getElementById('positionSelect').value = rec.position;
+        document.getElementById('customPositionBox').classList.add('hidden');
+      } else {
+        document.getElementById('positionSelect').value = 'Custom';
+        document.getElementById('customPositionInput').value = rec.position;
+        document.getElementById('customPositionBox').classList.remove('hidden');
+      }
+
+      document.getElementById('gradeSelect').value = rec.grade;
+      document.getElementById('customPointsInput').value = rec.points;
+
+      document.getElementById('formTitle').innerText = 'ഫലം എഡിറ്റ് ചെയ്യുക (Edit Result)';
+      document.getElementById('submitBtn').innerText = 'അപ്ഡേറ്റ് ചെയ്യുക ✏️';
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetForm() {
+      document.getElementById('resultForm').reset();
+      document.getElementById('editRecordId').value = '';
+      document.getElementById('formTitle').innerText = 'പുതിയ ഫലം ചേർക്കുക';
+      document.getElementById('submitBtn').innerText = 'ഫലം പബ്ലിഷ് ചെയ്യുക 🚀';
+      document.getElementById('cancelEditBtn').classList.add('hidden');
+      document.getElementById('customPositionBox').classList.add('hidden');
+      document.getElementById('customPointsInput').value = 8;
+    }
+
+    function deleteRecord(id) {
+      if(confirm('ഈ എന്റ്രി ഡിലീറ്റ് ചെയ്യണോ?')) {
+        const records = getRecords().filter(r => r.id !== id);
+        saveRecords(records);
+      }
+    }
+
+    function clearAllData() {
+      if(confirm('തീർച്ചയാണോ? എല്ലാ ഡാറ്റയും ഡിലീറ്റ് ആകും!')) {
+        localStorage.removeItem('arts_festival_records');
+        renderAdminTable();
+      }
+    }
+
+    function renderAdminTable() {
+      const records = getRecords();
+      const tbody = document.getElementById('adminTableBody');
+
+      if(records.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-4 text-gray-400">വിവരങ്ങൾ ഒന്നും ചേർത്തിട്ടില്ല</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = records.map(r => `
+        <tr class="border-b border-slate-700 hover:bg-slate-750">
+          <td class="p-3 font-semibold">${r.name}</td>
+          <td class="p-3">${r.group}</td>
+          <td class="p-3">${r.category}</td>
+          <td class="p-3">${r.event}</td>
+          <td class="p-3">${r.position}</td>
+          <td class="p-3">${r.grade}</td>
+          <td class="p-3 font-bold text-amber-400">+${r.points}</td>
+          <td class="p-3 text-right space-x-2">
+            <button onclick="editRecord(${r.id})" class="text-amber-400 hover:text-amber-300 font-bold text-xs bg-amber-900/30 px-2 py-1 rounded">Edit</button>
+            <button onclick="deleteRecord(${r.id})" class="text-red-400 hover:text-red-300 font-bold text-xs bg-red-900/30 px-2 py-1 rounded">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    renderAdminTable();
+  </script>
+</body>
+</html>
